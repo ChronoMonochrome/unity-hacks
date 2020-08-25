@@ -3,7 +3,7 @@ SPLIT_CONFIG=""
 FORMAT=${APP##*.}
 KEY=my-release-key.keystore
 #UNITY_LIB=unity-2018.4.2f1-d6fb3630ea75/libunity.so
-#UNITY_CONFIG=boot.config
+UNITY_CONFIG=boot.config
 
 set -x
 
