@@ -14,10 +14,11 @@ sign_apk()
 	unzip $APK -d .tmp >/dev/null
 	cd .tmp
 	UNSIGNED=${APK%.*}_unsigned.apk
-	zip -9r ../$UNSIGNED *  >/dev/null
+	zip -0r ../$UNSIGNED *  >/dev/null
 	cd ..
 	ALIGNED=${UNSIGNED%.*}_aligned.apk
-	zipalign -p 4 $UNSIGNED $ALIGNED
+	cp  $UNSIGNED $ALIGNED
+	#zipalign -p 4 $UNSIGNED $ALIGNED
 	rm $UNSIGNED
 	./apksigner sign --ks my-release-key.keystore  --ks-key-alias alias_name $ALIGNED
 	./apksigner verify $ALIGNED
