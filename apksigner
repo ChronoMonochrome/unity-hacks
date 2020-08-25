@@ -35,23 +35,7 @@ prog="${progdir}"/`basename "${prog}"`
 cd "${oldwd}"
 
 jarfile=apksigner.jar
-libdir="$progdir"
-
-if [ ! -r "$libdir/$jarfile" ]; then
-    # set apksigner.jar location for the SDK case
-    libdir="$libdir/lib"
-fi
-
-
-if [ ! -r "$libdir/$jarfile" ]; then
-    # set apksigner.jar location for the Android tree case
-    libdir=`dirname "$progdir"`/framework
-fi
-
-if [ ! -r "$libdir/$jarfile" ]; then
-    echo `basename "$prog"`": can't find $jarfile"
-    exit 1
-fi
+libdir="./"
 
 # By default, give apksigner a max heap size of 1 gig. This can be overridden
 # by using a "-J" option (see below).

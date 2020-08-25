@@ -18,8 +18,8 @@ sign_apk()
 	ALIGNED=${UNSIGNED%.*}_aligned.apk
 	zipalign -p 4 $UNSIGNED $ALIGNED
 	rm $UNSIGNED
-	apksigner sign --ks my-release-key.keystore  --ks-key-alias alias_name $ALIGNED
-	apksigner verify $ALIGNED
+	./apksigner sign --ks my-release-key.keystore  --ks-key-alias alias_name $ALIGNED
+	./apksigner verify $ALIGNED
 	mv $ALIGNED $APK
 	rm -r .tmp
 }
