@@ -4,7 +4,7 @@ FORMAT=${APP##*.}
 KEY=my-release-key.keystore
 UNITY_CONFIG=boot.config
 #UNITY_LIB=unity-2018.4.2f1-d6fb3630ea75/libunity.so
-IL2CPP_LIB=il2cpp/libil2cpp.so
+#IL2CPP_LIB=il2cpp/libil2cpp.so
 
 set -x
 
