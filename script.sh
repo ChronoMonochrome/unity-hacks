@@ -13,12 +13,21 @@ sign_apk()
 	APK=$1
 
 	UNSIGNED=${APK%.*}_unsigned.apk
-	cp $APK $UNSIGNED
 
 	# remove the signature
-	touch dummy.txt
-	aapt add -v $UNSIGNED dummy.txt
-	aapt remove -v $UNSIGNED dummy.txt
+	if [ "$FORMAT" == "xapk" ] ; then # && [ "$APK" == "$SPLIT_CONFIG" ] ; then
+		mkdir -p .tmp
+		unzip $APK -d .tmp >/dev/null
+		cd .tmp
+		zip -0r ../$UNSIGNED *  >/dev/null
+		cd ..
+		rm -r .tmp
+	else
+		cp $APK $UNSIGNED
+		touch dummy.txt
+		aapt add -v $UNSIGNED dummy.txt
+		aapt remove -v $UNSIGNED dummy.txt
+	fi
 
 	ALIGNED=${UNSIGNED%.*}_aligned.apk
 	zipalign -p 4 $UNSIGNED $ALIGNED
