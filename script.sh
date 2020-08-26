@@ -11,20 +11,21 @@ set -x
 sign_apk()
 {
 	APK=$1
-	mkdir -p .tmp
-	unzip $APK -d .tmp >/dev/null
-	cd .tmp
+
 	UNSIGNED=${APK%.*}_unsigned.apk
-	zip -0r ../$UNSIGNED *  >/dev/null
-	cd ..
+	cp $APK $UNSIGNED
+
+	# remove the signature
+	touch dummy.txt
+	aapt add -v $UNSIGNED dummy.txt
+	aapt remove -v $UNSIGNED dummy.txt
+
 	ALIGNED=${UNSIGNED%.*}_aligned.apk
-	cp  $UNSIGNED $ALIGNED
-	#zipalign -p 4 $UNSIGNED $ALIGNED
+	zipalign -p 4 $UNSIGNED $ALIGNED
 	rm $UNSIGNED
 	./apksigner sign --ks my-release-key.keystore  --ks-key-alias alias_name $ALIGNED
 	./apksigner verify $ALIGNED
 	mv $ALIGNED $APK
-	rm -r .tmp
 }
 
 add_unity_config()
@@ -34,7 +35,8 @@ add_unity_config()
 	mkdir -p tmp/assets/bin/Data
 	cp $CONFIG tmp/assets/bin/Data
 	cd tmp
-	zip -r assets/bin/Data/$CONFIG $APK  >/dev/null
+	aapt remove -v $APK assets/bin/Data/$CONFIG
+	aapt add -v $APK assets/bin/Data/$CONFIG
 	cd ..
 }
 
@@ -45,7 +47,8 @@ add_lib()
 	mkdir -p tmp/lib/armeabi-v7a
 	cp $LIB tmp/lib/armeabi-v7a
 	cd tmp
-	zip -r lib/armeabi-v7a/$LIB $APK  >/dev/null
+	aapt remove -v $APK lib/armeabi-v7a/$LIB
+	aapt add -v $APK lib/armeabi-v7a/$LIB
 	cd ..
 }
 
