@@ -28,27 +28,16 @@ sign_apk()
 	mv $ALIGNED $APK
 }
 
-add_unity_config()
+add_file()
 {
 	APK=$1
-	CONFIG=$2
-	mkdir -p tmp/assets/bin/Data
-	cp $CONFIG tmp/assets/bin/Data
+	FILE=$2
+	_PATH=$3
+	mkdir -p tmp/$_PATH
+	cp $FILE tmp/$_PATH
 	cd tmp
-	aapt remove -v $APK assets/bin/Data/$CONFIG
-	aapt add -v $APK assets/bin/Data/$CONFIG
-	cd ..
-}
-
-add_lib()
-{
-	APK=$1
-	LIB=$2
-	mkdir -p tmp/lib/armeabi-v7a
-	cp $LIB tmp/lib/armeabi-v7a
-	cd tmp
-	aapt remove -v $APK lib/armeabi-v7a/$LIB
-	aapt add -v $APK lib/armeabi-v7a/$LIB
+	aapt remove -v $APK $_PATH/$FILE
+	aapt add -v $APK $_PATH/$FILE
 	cd ..
 }
 
@@ -76,12 +65,12 @@ if [ "$FORMAT" == "xapk" ] ; then
 
 	if [ "$UNITY_LIB" != "" ] ; then
 		echo "Adding unity library"
-		add_lib $SPLIT_CONFIG $UNITY_LIB
+		add_file $SPLIT_CONFIG $UNITY_LIB lib/armeabi-v7a
 	fi
 
 	if [ "$IL2CPP_LIB" != "" ] ; then
 		echo "Adding il2cpp library"
-		add_lib $SPLIT_CONFIG $IL2CPP_LIB
+		add_file $SPLIT_CONFIG $IL2CPP_LIB lib/armeabi-v7a
 	fi
 
 	echo "Signing tmp/$SPLIT_CONFIG"
@@ -89,7 +78,7 @@ if [ "$FORMAT" == "xapk" ] ; then
 
 	if [ "$UNITY_CONFIG" != "" ] ; then
 		echo "Adding unity config"
-		add_unity_config "$APP" $UNITY_CONFIG
+		add_file $APP $UNITY_CONFIG assets/bin/Data
 	fi
 
 	echo "Signing tmp/$APP"
@@ -105,16 +94,16 @@ if [ "$FORMAT" == "apk" ] ; then
 	cp $APP tmp
 
 	echo "Adding unity config"
-	add_unity_config $APP boot.config
+	add_file $APP boot.config assets/bin/Data
 
 	if [ "$UNITY_LIB" != "" ] ; then
 		echo "Adding unity library"
-		add_lib $APP $UNITY_LIB
+		add_file $APP $UNITY_LIB lib/armeabi-v7a
 	fi
 
 	if [ "$IL2CPP_LIB" != "" ] ; then
 		echo "Adding il2cpp library"
-		add_lib $APP $IL2CPP_LIB
+		add_file $APP $IL2CPP_LIB lib/armeabi-v7a
 	fi
 
 	echo "Signing tmp/$APP"
