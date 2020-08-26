@@ -110,3 +110,6 @@ if [ "$FORMAT" == "apk" ] ; then
 	sign_apk "tmp/$APP"
 	mv tmp/$APP ${APP%.*}_signed.apk
 fi
+
+
+rm -r tmp
