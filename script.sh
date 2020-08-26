@@ -4,6 +4,7 @@ FORMAT=${APP##*.}
 KEY=my-release-key.keystore
 UNITY_CONFIG=boot.config
 #UNITY_LIB=unity-2018.4.2f1-d6fb3630ea75/libunity.so
+IL2CPP_LIB=il2cpp/libil2cpp.so
 
 set -x
 
@@ -37,7 +38,7 @@ add_unity_config()
 	cd ..
 }
 
-add_unity_lib()
+add_lib()
 {
 	APK=$1
 	LIB=$2
@@ -72,7 +73,12 @@ if [ "$FORMAT" == "xapk" ] ; then
 
 	if [ "$UNITY_LIB" != "" ] ; then
 		echo "Adding unity library"
-		add_unity_lib $SPLIT_CONFIG $UNITY_LIB
+		add_lib $SPLIT_CONFIG $UNITY_LIB
+	fi
+
+	if [ "$IL2CPP_LIB" != "" ] ; then
+		echo "Adding il2cpp library"
+		add_lib $SPLIT_CONFIG $IL2CPP_LIB
 	fi
 
 	echo "Signing tmp/$SPLIT_CONFIG"
@@ -100,7 +106,12 @@ if [ "$FORMAT" == "apk" ] ; then
 
 	if [ "$UNITY_LIB" != "" ] ; then
 		echo "Adding unity library"
-		add_unity_lib $APP $UNITY_LIB
+		add_lib $APP $UNITY_LIB
+	fi
+
+	if [ "$IL2CPP_LIB" != "" ] ; then
+		echo "Adding il2cpp library"
+		add_lib $APP $IL2CPP_LIB
 	fi
 
 	echo "Signing tmp/$APP"
